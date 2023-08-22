@@ -8,6 +8,16 @@ export default class Counter extends Component {
         }
     }
 
+    componentDidMount() {
+        this.setState({ count : 1})
+    }
+
+    componentDidUpdate() {
+        if (this.state.count === 10) {
+            this.setState({ count : 5})
+        }
+    }
+
     render() {
         return (
         <div className='flex items-center'>
