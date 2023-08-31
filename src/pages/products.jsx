@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import CardProduct from '../components/Fragments/CardProduct'
 import Button from '../components/Elements/Button/Index';
 import Counter from '../components/Fragments/Counter';
@@ -66,6 +66,23 @@ const ProductsPage = () => {
             setCart([...cart, {id, qty: 1}])
         }
     }
+
+    const cartRef = useRef(JSON.parse(localStorage.getItem("cart")) || [])
+
+    const handleAddToCartRef = (id) => {
+        cartRef.current = [...cartRef.current, {id , qty : 1}]
+        localStorage.setItem("cart", JSON.stringify(cartRef.current))
+    }
+
+    const totalPriceRef = useRef(null)
+
+    useEffect(() => {
+        if (cart.length > 0) {
+            totalPriceRef.current.style.display = "table-row"
+        } else {
+            totalPriceRef.current.style.display = "none"
+        }
+    }, [cart])
     
   return (
     <>
@@ -82,6 +99,7 @@ const ProductsPage = () => {
                         {product.description}
                         </CardProduct.Body>
                         <CardProduct.Footer price={product.price} id={product.id} handleAddToCart={handleAddToCart}></CardProduct.Footer>
+                        {/* <CardProduct.Footer price={product.price} id={product.id} handleAddToCart={handleAddToCartRef}></CardProduct.Footer> */}
                     </CardProduct>
                 ))}
             </div> 
@@ -97,7 +115,8 @@ const ProductsPage = () => {
                         </tr>                        
                     </thead>
                     <tbody>
-                        {cart.map((item) => { 
+                        {/* {cartRef.current.map((item) => {    // menggunakan cart ref */}
+                        {cart.map((item) => {               // menggunakan cart
                             const product = products.find(
                                 (product) => product.id === item.id
                             );
@@ -117,7 +136,7 @@ const ProductsPage = () => {
                                 </tr>
                             );
                         })}
-                        <tr>
+                        <tr ref={totalPriceRef}>
                             <td colSpan={3}>
                                 <b>Total Price</b>
                             </td>
